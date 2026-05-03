@@ -4,22 +4,20 @@ import time
 import pandas as pd
 import pickle
 import argparse
+
 # --------------------------------
-# LOAD GPU DATA
+# LOAD DATA FUNCTION
 # --------------------------------
-POP_SIZE     = int(input("Population size       : ") or 500)
-GENERATIONS  = int(input("Number of generations : ") or 50)
-MUTATION_STD = float(input("Mutation std          : ") or 0.1)
-seed_input   = input("Random seed (leave blank to skip): ").strip()
-if seed_input:
-    cp.random.seed(int(seed_input))
+def load_data(csv_file="processed_molecules.csv"):
+    """Load molecular data from CSV file"""
+    df = cudf.read_csv(csv_file)
+    data = cp.asarray(df[['mol_wt', 'logp', 'h_donors', 'h_acceptors', 'tpsa']].values)
+    return data
 
-df = cudf.read_csv("processed_molecules.csv")
-data = cp.asarray(df[['mol_wt', 'logp', 'h_donors', 'h_acceptors', 'tpsa']].values)
-
-population = data[:POP_SIZE]
-
-history = []
+# --------------------------------
+# GLOBAL MUTATION_STD (needed for mutation function)
+# --------------------------------
+MUTATION_STD = 0.1
 # --------------------------------
 # OBJECTIVE FUNCTIONS
 # --------------------------------
@@ -60,12 +58,12 @@ def non_dominated_sort(fitness):
 
 
 # --------------------------------
-# SELECTION
+# SELECTION (now takes pop_size as parameter)
 # --------------------------------
-def select(pop, fitness):
+def select(pop, fitness, pop_size):
     ranks = non_dominated_sort(fitness)
     idx = cp.argsort(ranks)
-    return pop[idx[:POP_SIZE]]
+    return pop[idx[:pop_size]]
 
 
 # --------------------------------
@@ -78,66 +76,123 @@ def crossover(parent1, parent2):
 
 
 # --------------------------------
-# MUTATION
+# MUTATION (now takes mutation_std as parameter)
 # --------------------------------
-def mutate(child):
-    noise = cp.random.normal(0, MUTATION_STD, size=child.shape)
+def mutate(child, mutation_std):
+    noise = cp.random.normal(0, mutation_std, size=child.shape)
     return child + noise
 
 
 # --------------------------------
-# MAIN NSGA LOOP
+# MAIN NSGA-II OPTIMIZATION FUNCTION
 # --------------------------------
-for gen in range(GENERATIONS):
-    # start = time.time()
-    fitness = evaluate(population)
+def run_nsga2_optimization(pop_size=500, generations=50, mutation_std=0.1, seed=None):
+    """
+    Run NSGA-II optimization algorithm on GPU
+    
+    Parameters:
+    -----------
+    pop_size : int
+        Population size
+    generations : int
+        Number of generations to run
+    mutation_std : float
+        Standard deviation for Gaussian mutation
+    seed : int or None
+        Random seed for reproducibility
+        
+    Returns:
+    --------
+    pareto_df : pd.DataFrame
+        Pareto front solutions
+    history : dict
+        Optimization history with 'best_fitness' key
+    """
+    global MUTATION_STD
+    MUTATION_STD = mutation_std
+    
+    if seed is not None:
+        cp.random.seed(seed)
+    
+    # Load data
+    data = load_data()
+    population = data[:pop_size]
+    
+    history_best_fitness = []
+    
+    # --------------------------------
+    # MAIN NSGA LOOP
+    # --------------------------------
+    for gen in range(generations):
+        fitness = evaluate(population)
+        
+        # Selection
+        selected = select(population, fitness, pop_size)
+        
+        # Generate offspring
+        offspring = []
+        for i in range(0, pop_size, 2):
+            p1 = selected[i % pop_size]
+            p2 = selected[(i+1) % pop_size]
+            
+            child1 = mutate(crossover(p1, p2), mutation_std)
+            child2 = mutate(crossover(p2, p1), mutation_std)
+            
+            offspring.append(child1)
+            offspring.append(child2)
+        
+        offspring = cp.stack(offspring)
+        
+        # Combine
+        population = cp.concatenate([selected, offspring], axis=0)
+        
+        # Reduce to pop_size
+        fitness = evaluate(population)
+        population = select(population, fitness, pop_size)
+        
+        # Track best fitness
+        ranks = non_dominated_sort(fitness)
+        best_fitness = cp.min(fitness[ranks == 0]).item() if cp.any(ranks == 0) else cp.min(fitness).item()
+        history_best_fitness.append(best_fitness)
+        
+        print(f"Generation {gen+1}/{generations} completed")
+    
+    # --------------------------------
+    # FINAL PARETO FRONT
+    # --------------------------------
+    final_fitness = evaluate(population)
+    ranks = non_dominated_sort(final_fitness)
+    
+    pareto_front = population[ranks == 0]
+    
+    print(f"Pareto optimal solutions: {pareto_front.shape[0]}")
+    
+    pareto_np = cp.asnumpy(pareto_front)
+    cols = ['mol_wt', 'logp', 'h_donors', 'h_acceptors', 'tpsa']
+    pareto_df = pd.DataFrame(pareto_np, columns=cols)
+    
+    history = {'best_fitness': history_best_fitness}
+    
+    return pareto_df, history
 
-    # Selection
-    selected = select(population, fitness)
-
-    # Generate offspring
-    offspring = []
-    for i in range(0, POP_SIZE, 2):
-        p1 = selected[i]
-        p2 = selected[i+1]
-
-        child1 = mutate(crossover(p1, p2))
-        child2 = mutate(crossover(p2, p1))
-
-        offspring.append(child1)
-        offspring.append(child2)
-
-    offspring = cp.stack(offspring)
-
-    # Combine
-    population = cp.concatenate([selected, offspring], axis=0)
-
-    # Convert a small sample to CPU (to reduce overhead)
-    sample = cp.asnumpy(population[:200])   # only 200 points
-    history.append(sample)
-
-    # Reduce to POP_SIZE
-    fitness = evaluate(population)
-    population = select(population, fitness)
-
-    print(f"Generation {gen+1} completed")
-    # print(f"Gen {gen+1} time:", time.time() - start)
-
-with open("generation_history.pkl", "wb") as f:
-    pickle.dump(history, f)
 
 # --------------------------------
-# FINAL PARETO FRONT
+# INTERACTIVE CLI MODE
 # --------------------------------
-final_fitness = evaluate(population)
-ranks = non_dominated_sort(final_fitness)
-
-pareto_front = population[ranks == 0]
-
-print("Pareto optimal solutions:", pareto_front.shape)
-
-pareto_np = cp.asnumpy(pareto_front)
-cols = ['mol_wt', 'logp', 'h_donors', 'h_acceptors', 'tpsa']
-pareto_df = pd.DataFrame(pareto_np, columns=cols)
-pareto_df.to_csv("pareto_front.csv", index=False)
-print("Saved: pareto_front.csv")
+if __name__ == "__main__":
+    POP_SIZE     = int(input("Population size       : ") or 500)
+    GENERATIONS  = int(input("Number of generations : ") or 50)
+    MUTATION_STD = float(input("Mutation std          : ") or 0.1)
+    seed_input   = input("Random seed (leave blank to skip): ").strip()
+    
+    seed = int(seed_input) if seed_input else None
+    
+    pareto_df, history = run_nsga2_optimization(
+        pop_size=POP_SIZE,
+        generations=GENERATIONS,
+        mutation_std=MUTATION_STD,
+        seed=seed
+    )
+    
+    pareto_df.to_csv("pareto_front.csv", index=False)
+    print("Saved: pareto_front.csv")

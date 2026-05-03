@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import gzip
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 from rdkit import Chem
 from rdkit.Chem import Descriptors
@@ -105,18 +106,17 @@ print("Generating plots...")
 features_df[cols].hist(figsize=(10, 6))
 plt.suptitle("Feature Distributions (Normalized)")
 plt.tight_layout()
-plt.show()
+plt.savefig("Feature_distributions.png", bbox_inches='tight')
+plt.close()
 
 # Correlation heatmap
 corr = features_df[cols].corr()
 
 plt.figure()
-plt.imshow(corr)
-plt.title("Feature Correlation")
-plt.colorbar()
-plt.xticks(range(len(cols)), cols, rotation=45)
-plt.yticks(range(len(cols)), cols)
-plt.show()
+sns.heatmap(corr, annot=True)
+plt.title("Feature Correlation Heatmap")
+plt.savefig("Correlation_heatmap.png", bbox_inches='tight')
+plt.close()
 
 
 # --------------------------------

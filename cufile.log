@@ -102,3 +102,68 @@
  12-04-2026 16:44:42:987 [pid=1783 tid=1783] ERROR  0:140 unable to load,  libnuma.so.1.0.0 
 
  12-04-2026 16:44:42:987 [pid=1783 tid=1783] ERROR  0:91 dlopen error libnuma.so.1.0.0: cannot open shared object file: No such file or directory
+ 13-04-2026 02:48:11:994 [pid=2664 tid=2664] ERROR  0:140 unable to load,  liburcu-bp.so.6 
+
+ 13-04-2026 02:48:11:996 [pid=2664 tid=2664] ERROR  0:140 unable to load,  liburcu-bp.so.1 
+
+ 13-04-2026 02:48:11:997 [pid=2664 tid=2664] WARN   0:172 failed to open /proc/driver/nvidia-fs/devcount  error: No such file or directory
+ 13-04-2026 02:48:11:997 [pid=2664 tid=2664] NOTICE  cufio-drv:720 running in compatible mode
+ 13-04-2026 02:48:11:999 [pid=2664 tid=2664] ERROR  cufio-plat:101 cannot open path /sys/bus/pci/devices/0000:01:00.0/resource No such file or directory
+ 13-04-2026 02:48:12:0 [pid=2664 tid=2664] WARN   cufio-plat:429 GPU index 0 NVIDIA GeForce RTX 4060 Laptop GPU: Model Not Supported
+ 13-04-2026 02:48:12:1 [pid=2664 tid=2664] WARN   cufio-udev:168 failed in udev device create: /sys/bus/pci/devices/0000:01:00.0
+ 13-04-2026 02:48:12:269 [pid=2664 tid=2664] ERROR  cufio-topo-udev:431 no device entries present in platform topology
+ 13-04-2026 02:48:12:271 [pid=2664 tid=2664] ERROR  0:140 unable to load,  libnuma.so.1.0.0 
+
+ 13-04-2026 02:48:12:272 [pid=2664 tid=2664] ERROR  0:91 dlopen error libnuma.so.1.0.0: cannot open shared object file: No such file or directory
+ 13-04-2026 03:16:23:860 [pid=5509 tid=5509] ERROR  0:140 unable to load,  liburcu-bp.so.6 
+
+ 13-04-2026 03:16:23:862 [pid=5509 tid=5509] ERROR  0:140 unable to load,  liburcu-bp.so.1 
+
+ 13-04-2026 03:16:23:863 [pid=5509 tid=5509] WARN   0:172 failed to open /proc/driver/nvidia-fs/devcount  error: No such file or directory
+ 13-04-2026 03:16:23:863 [pid=5509 tid=5509] NOTICE  cufio-drv:720 running in compatible mode
+ 13-04-2026 03:16:23:864 [pid=5509 tid=5509] ERROR  cufio-plat:101 cannot open path /sys/bus/pci/devices/0000:01:00.0/resource No such file or directory
+ 13-04-2026 03:16:23:864 [pid=5509 tid=5509] WARN   cufio-plat:429 GPU index 0 NVIDIA GeForce RTX 4060 Laptop GPU: Model Not Supported
+ 13-04-2026 03:16:23:865 [pid=5509 tid=5509] WARN   cufio-udev:168 failed in udev device create: /sys/bus/pci/devices/0000:01:00.0
+ 13-04-2026 03:16:24:147 [pid=5509 tid=5509] ERROR  cufio-topo-udev:431 no device entries present in platform topology
+ 13-04-2026 03:16:24:148 [pid=5509 tid=5509] ERROR  0:140 unable to load,  libnuma.so.1.0.0 
+
+ 13-04-2026 03:16:24:149 [pid=5509 tid=5509] ERROR  0:91 dlopen error libnuma.so.1.0.0: cannot open shared object file: No such file or directory
+ 03-05-2026 13:56:56:840 [pid=5462 tid=5895] ERROR  0:140 unable to load,  liburcu-bp.so.6 
+
+ 03-05-2026 13:56:56:841 [pid=5462 tid=5895] ERROR  0:140 unable to load,  liburcu-bp.so.1 
+
+ 03-05-2026 13:56:56:841 [pid=5462 tid=5895] WARN   0:172 failed to open /proc/driver/nvidia-fs/devcount  error: No such file or directory
+ 03-05-2026 13:56:56:842 [pid=5462 tid=5895] NOTICE  cufio-drv:720 running in compatible mode
+ 03-05-2026 13:56:56:844 [pid=5462 tid=5895] ERROR  cufio-plat:101 cannot open path /sys/bus/pci/devices/0000:01:00.0/resource No such file or directory
+ 03-05-2026 13:56:56:844 [pid=5462 tid=5895] WARN   cufio-plat:429 GPU index 0 NVIDIA GeForce RTX 4060 Laptop GPU: Model Not Supported
+ 03-05-2026 13:56:56:846 [pid=5462 tid=5895] WARN   cufio-udev:168 failed in udev device create: /sys/bus/pci/devices/0000:01:00.0
+ 03-05-2026 13:56:57:54 [pid=5462 tid=5895] ERROR  cufio-topo-udev:431 no device entries present in platform topology
+ 03-05-2026 13:56:57:56 [pid=5462 tid=5895] ERROR  0:140 unable to load,  libnuma.so.1.0.0 
+
+ 03-05-2026 13:56:57:57 [pid=5462 tid=5895] ERROR  0:91 dlopen error libnuma.so.1.0.0: cannot open shared object file: No such file or directory
+ 03-05-2026 14:02:29:136 [pid=6842 tid=7162] ERROR  0:140 unable to load,  liburcu-bp.so.6 
+
+ 03-05-2026 14:02:29:137 [pid=6842 tid=7162] ERROR  0:140 unable to load,  liburcu-bp.so.1 
+
+ 03-05-2026 14:02:29:138 [pid=6842 tid=7162] WARN   0:172 failed to open /proc/driver/nvidia-fs/devcount  error: No such file or directory
+ 03-05-2026 14:02:29:138 [pid=6842 tid=7162] NOTICE  cufio-drv:720 running in compatible mode
+ 03-05-2026 14:02:29:139 [pid=6842 tid=7162] ERROR  cufio-plat:101 cannot open path /sys/bus/pci/devices/0000:01:00.0/resource No such file or directory
+ 03-05-2026 14:02:29:140 [pid=6842 tid=7162] WARN   cufio-plat:429 GPU index 0 NVIDIA GeForce RTX 4060 Laptop GPU: Model Not Supported
+ 03-05-2026 14:02:29:141 [pid=6842 tid=7162] WARN   cufio-udev:168 failed in udev device create: /sys/bus/pci/devices/0000:01:00.0
+ 03-05-2026 14:02:29:346 [pid=6842 tid=7162] ERROR  cufio-topo-udev:431 no device entries present in platform topology
+ 03-05-2026 14:02:29:348 [pid=6842 tid=7162] ERROR  0:140 unable to load,  libnuma.so.1.0.0 
+
+ 03-05-2026 14:02:29:348 [pid=6842 tid=7162] ERROR  0:91 dlopen error libnuma.so.1.0.0: cannot open shared object file: No such file or directory
+ 03-05-2026 14:18:52:570 [pid=10894 tid=11100] ERROR  0:140 unable to load,  liburcu-bp.so.6 
+
+ 03-05-2026 14:18:52:571 [pid=10894 tid=11100] ERROR  0:140 unable to load,  liburcu-bp.so.1 
+
+ 03-05-2026 14:18:52:572 [pid=10894 tid=11100] WARN   0:172 failed to open /proc/driver/nvidia-fs/devcount  error: No such file or directory
+ 03-05-2026 14:18:52:572 [pid=10894 tid=11100] NOTICE  cufio-drv:720 running in compatible mode
+ 03-05-2026 14:18:52:573 [pid=10894 tid=11100] ERROR  cufio-plat:101 cannot open path /sys/bus/pci/devices/0000:01:00.0/resource No such file or directory
+ 03-05-2026 14:18:52:574 [pid=10894 tid=11100] WARN   cufio-plat:429 GPU index 0 NVIDIA GeForce RTX 4060 Laptop GPU: Model Not Supported
+ 03-05-2026 14:18:52:574 [pid=10894 tid=11100] WARN   cufio-udev:168 failed in udev device create: /sys/bus/pci/devices/0000:01:00.0
+ 03-05-2026 14:18:52:768 [pid=10894 tid=11100] ERROR  cufio-topo-udev:431 no device entries present in platform topology
+ 03-05-2026 14:18:52:770 [pid=10894 tid=11100] ERROR  0:140 unable to load,  libnuma.so.1.0.0 
+
+ 03-05-2026 14:18:52:770 [pid=10894 tid=11100] ERROR  0:91 dlopen error libnuma.so.1.0.0: cannot open shared object file: No such file or directory
