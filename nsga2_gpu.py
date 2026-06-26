@@ -118,8 +118,7 @@ def run_nsga2_optimization(pop_size=500, generations=50, mutation_std=0.1, seed=
     data = load_data()
     population = data[:pop_size]
     
-    history_best_fitness = []
-    
+    history_best_fitness = []    
     # --------------------------------
     # MAIN NSGA LOOP
     # --------------------------------
@@ -174,7 +173,6 @@ def run_nsga2_optimization(pop_size=500, generations=50, mutation_std=0.1, seed=
     history = {'best_fitness': history_best_fitness}
     
     return pareto_df, history
-
 
 # --------------------------------
 # INTERACTIVE CLI MODE
